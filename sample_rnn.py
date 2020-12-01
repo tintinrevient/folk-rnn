@@ -1,6 +1,8 @@
 from __future__ import print_function
 
 import theano
+theano.config.gcc.cxxflags = "-Wno-c++11-narrowing"
+
 import lasagne
 import os
 import sys
@@ -34,8 +36,8 @@ temperature = args.temperature
 ntunes = args.ntunes
 seed = args.seed
 
-with open(metadata_path) as f:
-    metadata = pickle.load(f)
+with open(metadata_path, 'rb') as f:
+    metadata = pickle.load(f, encoding='latin1')
 
 config = importlib.import_module('configurations.%s' % metadata['configuration'])
 
@@ -46,7 +48,7 @@ target_path = "samples/%s-s%d-%.2f-%s.txt" % (
     metadata['experiment_id'], rng_seed, temperature, time.strftime("%Y%m%d-%H%M%S", time.localtime()))
 
 token2idx = metadata['token2idx']
-idx2token = dict((v, k) for k, v in token2idx.iteritems())
+idx2token = dict((v, k) for k, v in token2idx.items())
 vocab_size = len(token2idx)
 
 print('Building the model')
@@ -59,7 +61,7 @@ emb_output_size = vocab_size if config.one_hot else config.embedding_size
 l_emb = EmbeddingLayer(l_inp, input_size=vocab_size, output_size=emb_output_size, W=W_emb)
 
 main_layers = []
-for _ in xrange(config.num_layers):
+for _ in range(config.num_layers):
     if not main_layers:
         main_layers.append(LSTMLayer(l_emb, num_units=config.rnn_size,
                                      peepholes=False,
@@ -98,7 +100,7 @@ if seed is not None:
     for token in seed.split(' '):
         seed_sequence.append(token2idx[token])
 
-for i in xrange(ntunes):
+for i in range(ntunes):
     sequence = seed_sequence[:]
     while sequence[-1] != end_idx:
         next_itoken = rng.choice(vocab_idxs, p=predict(np.array([sequence], dtype='int32')))
@@ -107,13 +109,13 @@ for i in xrange(ntunes):
     abc_tune = [idx2token[j] for j in sequence[1:-1]]
     if not args.terminal:
         f = open(target_path, 'a+')
-	f.write('X:' + repr(i) + '\n')
+        f.write('X:' + repr(i) + '\n')
         f.write(abc_tune[0] + '\n')
         f.write(abc_tune[1] + '\n')
         f.write(' '.join(abc_tune[2:]) + '\n\n')
         f.close()
     else:
-	print('X:' + repr(i))
+        print('X:' + repr(i))
         print(abc_tune[0])
         print(abc_tune[1])
         print(' '.join(abc_tune[2:]) + '\n')

@@ -11,7 +11,7 @@ See the following websites:
 Using conda, do the following:
 
 ~~~~
-conda create --name py2 python=2.7
+conda create --name py3 python=3.9
 pip install --upgrade https://github.com/Theano/Theano/archive/master.zip
 pip install --upgrade https://github.com/Lasagne/Lasagne/archive/master.zip
 git clone https://github.com/IraKorshunova/folk-rnn.git
@@ -20,8 +20,23 @@ cd folk-rnn
 
 Then to generate using one of the pretrained models:
 ~~~~
-python sample_rnn.py --terminal metadata/folkrnn_v2.pkl
+python sample_rnn.py --terminal --rng_seed 589 metadata/folkrnn_v2.pkl
 ~~~~
+
+Convert the abc notation to staff and midi:
+* http://www.mandolintab.net/abcconverter.php
+```
+X:0
+M:6/8
+K:Cmix
+G F G B 2 G | c c c c 3 | B A G F E C | G F B G F E | C D E F 2 c | B A G c 2 d | e e d B F B |1 G F F F E F :| |2 G F F F F G |: A F A d 2 c | B G B c B G | A G F A B G | F D F D C C | A F A B 2 c | B d c c B G | F F E F F G |1 A F F F G A :| |2 A F F F 2 G |
+```
+
+Other references:
+* https://folkrnn.org/
+* http://abcnotation.com/software#AbcConverter
+* https://wiki.python.org/moin/PythonInMusic
+
 
 To train a new model:
 ~~~~
