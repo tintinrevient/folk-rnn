@@ -20,7 +20,8 @@ cd folk-rnn
 
 Then to generate using one of the pretrained models:
 ~~~~
-python sample_rnn.py --terminal --rng_seed 589 metadata/folkrnn_v2.pkl
+python sample_rnn.py metadata/folkrnn_v2.pkl --terminal --rng_seed 589
+python sample_rnn.py metadata/folkrnn_v2.pkl --terminal --ntunes 3 --seed "M:6/8 K:Cmaj G E G E 3"
 ~~~~
 
 Convert the abc notation to staff and midi:
